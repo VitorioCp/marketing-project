@@ -1,6 +1,6 @@
-'use client';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+"use client";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableHeader,
@@ -8,28 +8,36 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from '@/components/ui/table';
-import { useEffect, useState } from 'react';
-import { ModalEditClient } from '@/components/clients/ModalEditClient';
+} from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import { ModalEditClient } from "@/components/clients/ModalEditClient";
+
+type Cliente = {
+  id: string;
+  nome: string;
+  telefone: string;
+  email: string;
+  etapa: string;
+};
 
 export default function Clients() {
-  const [clientes, setClientes] = useState([]);
+  const [clientes, setClientes] = useState<Cliente[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [formData, setFormData] = useState({
-    id: '',
-    nome: '',
-    telefone: '',
-    email: '',
-    etapa: '',
+  const [formData, setFormData] = useState<Cliente>({
+    id: "",
+    nome: "",
+    telefone: "",
+    email: "",
+    etapa: "",
   });
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedClients, setSelectedClients] = useState<string[]>([]);
   const [selectionMode, setSelectionMode] = useState(false);
 
   const fetchClientes = async () => {
-    const res = await fetch('/api/clients');
+    const res = await fetch("/api/clients");
     const data = await res.json();
     setClientes(data);
   };
@@ -38,7 +46,7 @@ export default function Clients() {
     fetchClientes();
   }, []);
 
-  const filteredClients = clientes.filter((cliente: any) => {
+  const filteredClients = clientes.filter((cliente: Cliente) => {
     const termo = searchTerm.toLowerCase();
     return (
       cliente.nome.toLowerCase().includes(termo) ||
@@ -59,9 +67,9 @@ export default function Clients() {
       await Promise.all(
         selectedClients.map((id) =>
           fetch(`/api/clients`, {
-            method: 'DELETE',
+            method: "DELETE",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({ id }),
           })
@@ -71,7 +79,7 @@ export default function Clients() {
       setSelectionMode(false);
       fetchClientes();
     } catch (error) {
-      console.error('Erro ao deletar clientes:', error);
+      console.error("Erro ao deletar clientes:", error);
     }
   };
 
@@ -79,7 +87,7 @@ export default function Clients() {
     setShowModal(!showModal);
   };
 
-  const openEditModal = (cliente: any) => {
+  const openEditModal = (cliente: Cliente) => {
     setFormData({
       id: cliente.id,
       nome: cliente.nome,
@@ -90,53 +98,52 @@ export default function Clients() {
     setShowEditModal(true);
   };
 
-  const clientRegister = async (e: any) => {
+  const clientRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/clients', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/clients", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      console.log('Cliente cadastrado:', data);
+      console.log("Cliente cadastrado:", data);
       await fetchClientes();
       setShowModal(false);
     } catch (error) {
-      console.error('Error registering client:', error);
+      console.error("Error registering client:", error);
     }
   };
 
-  const clientUpdate = async (e: any) => {
+  const clientUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/clients', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/clients", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      console.log('Cliente atualizado:', data);
-      closeEditModal()
+      console.log("Cliente atualizado:", data);
+      closeEditModal();
       await fetchClientes();
       setShowEditModal(false);
     } catch (error) {
-      console.error('Error updating client:', error);
+      console.error("Error updating client:", error);
     }
   };
 
   const closeEditModal = () => {
-  setShowEditModal(false);
-  setFormData({
-    id: '',
-    nome: '',
-    telefone: '',
-    email: '',
-    etapa: '',
-  });
-};
+    setShowEditModal(false);
+    setFormData({
+      id: "",
+      nome: "",
+      telefone: "",
+      email: "",
+      etapa: "",
+    });
+  };
 
-  
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-6">Clientes</h1>
@@ -199,11 +206,11 @@ export default function Clients() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredClients.map((cliente: any) => (
+            {filteredClients.map((cliente: Cliente) => (
               <TableRow
                 key={cliente.id}
                 className={`transition hover:bg-gray-50 cursor-pointer ${
-                  selectedClients.includes(cliente.id) ? 'bg-gray-100' : ''
+                  selectedClients.includes(cliente.id) ? "bg-gray-100" : ""
                 }`}
                 onClick={() => {
                   if (!selectionMode) {
@@ -288,7 +295,13 @@ export default function Clients() {
         </div>
       )}
 
-      <ModalEditClient showEditModal={showEditModal} clientUpdate={clientUpdate} setShowEditModal={closeEditModal} formData={formData} setFormData={setFormData}/>
+      <ModalEditClient
+        showEditModal={showEditModal}
+        clientUpdate={clientUpdate}
+        setShowEditModal={closeEditModal}
+        formData={formData}
+        setFormData={setFormData}
+      />
     </div>
   );
 }

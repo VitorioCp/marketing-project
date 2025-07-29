@@ -1,7 +1,7 @@
-'use client'
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { useState } from 'react';
+"use client";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { useState } from "react";
 
 interface ClientData {
   id: string;
@@ -13,7 +13,7 @@ interface ClientData {
 
 interface ModalEditClientProps {
   showEditModal: boolean;
-  clientUpdate: (e: React.FormEvent) => void;
+  clientUpdate: (e: React.FormEvent<HTMLFormElement>) => void | Promise<void>;
   setShowEditModal: (show: boolean) => void;
   formData: ClientData;
   setFormData: (data: ClientData) => void;
@@ -26,47 +26,45 @@ export const ModalEditClient = ({
   formData,
   setFormData,
 }: ModalEditClientProps) => {
-  if (!showEditModal) return null;
-
-  const [activeTab, setActiveTab] = useState<'dados' | 'interacoes'>('dados');
+  const [activeTab, setActiveTab] = useState<"dados" | "interacoes">("dados");
 
   const [interacoes, setInteracoes] = useState([
     {
-      tipo: 'Ligação',
+      tipo: "Ligação",
       descricao:
-        'Cliente interessado no produto premium. Solicitou orçamento detalhado.',
-      data: '14/01/2024',
-      hora: '14:30',
+        "Cliente interessado no produto premium. Solicitou orçamento detalhado.",
+      data: "14/01/2024",
+      hora: "14:30",
     },
     {
-      tipo: 'E-Mail',
+      tipo: "E-Mail",
       descricao:
-        'Enviado proposta comercial com desconto de 10% para fechamento até o final do mês.',
-      data: '11/01/2024',
-      hora: '09:15',
+        "Enviado proposta comercial com desconto de 10% para fechamento até o final do mês.",
+      data: "11/01/2024",
+      hora: "09:15",
     },
     {
-      tipo: 'Reunião',
+      tipo: "Reunião",
       descricao:
-        'Reunião de apresentação do produto. Cliente demonstrou interesse, mas precisa de aprovação interna.',
-      data: '09/01/2024',
-      hora: '16:00',
+        "Reunião de apresentação do produto. Cliente demonstrou interesse, mas precisa de aprovação interna.",
+      data: "09/01/2024",
+      hora: "16:00",
     },
   ]);
 
   const [novaInteracao, setNovaInteracao] = useState({
-    tipo: 'Anotação',
-    descricao: '',
+    tipo: "Anotação",
+    descricao: "",
   });
 
   const adicionarInteracao = () => {
     if (!novaInteracao.descricao.trim()) return;
 
     const agora = new Date();
-    const data = agora.toLocaleDateString('pt-BR');
-    const hora = agora.toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit',
+    const data = agora.toLocaleDateString("pt-BR");
+    const hora = agora.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
     });
 
     const nova = {
@@ -77,19 +75,19 @@ export const ModalEditClient = ({
     };
 
     setInteracoes([nova, ...interacoes]);
-    setNovaInteracao({ tipo: 'Anotação', descricao: '' });
+    setNovaInteracao({ tipo: "Anotação", descricao: "" });
   };
 
   const tipoBadgeStyle = (tipo: string) => {
     switch (tipo) {
-      case 'Ligação':
-        return 'bg-blue-100 text-blue-700';
-      case 'E-Mail':
-        return 'bg-green-100 text-green-700';
-      case 'Reunião':
-        return 'bg-purple-100 text-purple-700';
+      case "Ligação":
+        return "bg-blue-100 text-blue-700";
+      case "E-Mail":
+        return "bg-green-100 text-green-700";
+      case "Reunião":
+        return "bg-purple-100 text-purple-700";
       default:
-        return 'bg-gray-100 text-gray-700';
+        return "bg-gray-100 text-gray-700";
     }
   };
 
@@ -100,6 +98,8 @@ export const ModalEditClient = ({
       [name]: value,
     });
   };
+
+  if (!showEditModal) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -112,20 +112,20 @@ export const ModalEditClient = ({
         <div className="bg-gray-200 h-12 justify-center items-center flex p-1 rounded-sm">
           <button
             type="button"
-            onClick={() => setActiveTab('dados')}
+            onClick={() => setActiveTab("dados")}
             className={`w-1/2 px-4 py-2 border rounded-xs ${
-              activeTab === 'dados' ? 'bg-gray-200 font-semibold' : 'bg-white'
+              activeTab === "dados" ? "bg-gray-200 font-semibold" : "bg-white"
             }`}
           >
             Dados Básicos
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('interacoes')}
+            onClick={() => setActiveTab("interacoes")}
             className={`w-1/2 px-4 py-2 border rounded-xs ${
-              activeTab === 'interacoes'
-                ? 'bg-gray-200 font-semibold'
-                : 'bg-white'
+              activeTab === "interacoes"
+                ? "bg-gray-200 font-semibold"
+                : "bg-white"
             }`}
           >
             Interações
@@ -133,7 +133,7 @@ export const ModalEditClient = ({
         </div>
 
         <form className="space-y-4 mt-4" onSubmit={clientUpdate}>
-          {activeTab === 'dados' ? (
+          {activeTab === "dados" ? (
             <>
               <div className="flex gap-2">
                 <div className="flex flex-col gap-2 w-1/2">

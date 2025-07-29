@@ -1,6 +1,4 @@
-'use client';
-
-import { BoxInfo } from '@/components/BoxInfo/boxInfo';
+import { BoxInfo } from "@/components/BoxInfo/boxInfo";
 
 export default function DashboardPage() {
   return (
