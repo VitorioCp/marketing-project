@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -18,7 +18,6 @@ export default function DashboardLayout({
 }) {
   const [open, setOpen] = useState(true);
   const pathname = usePathname();
-
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
       <aside
