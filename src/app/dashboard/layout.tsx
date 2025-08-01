@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -10,12 +10,21 @@ import {
   HiClipboardList,
 } from "react-icons/hi";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
+import { get } from "http";
+import { getCookie } from "cookies-next";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  useEffect(() => {
+    const token = getCookie("token");
+    if (!token) {
+      window.location.href = "/login";
+    }
+  }, []);
+
   const [open, setOpen] = useState(true);
   const pathname = usePathname();
   return (
