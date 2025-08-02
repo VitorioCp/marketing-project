@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -10,7 +10,6 @@ import {
   HiClipboardList,
 } from "react-icons/hi";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
-import { get } from "http";
 import { getCookie } from "cookies-next";
 
 export default function DashboardLayout({

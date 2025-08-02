@@ -6,8 +6,6 @@ import { motion } from "framer-motion";
 import { Api } from "../../api/clients/api";
 import { setCookie } from "cookies-next";
 
-import path from "path";
-
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -33,8 +31,9 @@ export default function Login() {
 
       router.push("/dashboard");
     } catch (error) {
-      error instanceof Error &&
+      if (error instanceof Error) {
         console.error("Erro ao fazer login:", error.message);
+      }
     }
   };
 
