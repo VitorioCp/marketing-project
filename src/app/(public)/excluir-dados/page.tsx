@@ -1,4 +1,4 @@
-export default function ExcluirDadosPage() {
+export default function excluirDados() {
   return (
     <div>
       <h1>Excluir Dados</h1>

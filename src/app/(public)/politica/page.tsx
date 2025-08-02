@@ -1,4 +1,4 @@
-export default function PoliticaPage() {
+export default function Politica() {
   return (
     <div>
       <h1>Política de Privacidade</h1>
