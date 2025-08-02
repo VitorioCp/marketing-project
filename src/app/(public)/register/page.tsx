@@ -1,39 +1,30 @@
 "use client";
-
+import { Api } from "@/app/api/clients/api";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Api } from "../../api/clients/api";
-import { setCookie } from "cookies-next";
-import Link from "next/link";
+import Router from "next/router";
 
-export default function Login() {
-  const router = useRouter();
+export default function Register() {
   const [email, setEmail] = useState("");
+  const [login, setLogin] = useState(""); // Adicionado estado para login
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await Api.post("/auth/login", {
-        identifier: email,
+      const response = await Api.post("/auth/register", {
+        email,
+        login, // Enviando login também
         password,
       });
 
-      console.log("Login bem-sucedido:", response.data);
+      console.log("Registro bem-sucedido:", response.data);
 
-      setCookie("token", response.data.token, {
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-      });
-
-      router.push("/dashboard");
+      Router.push("/dashboard");
     } catch (error) {
       if (error instanceof Error) {
-        console.error("Erro ao fazer login:", error.message);
+        console.error("Erro ao fazer registro:", error.message);
       }
     }
   };
@@ -41,14 +32,14 @@ export default function Login() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-blue-100">
       <motion.form
-        onSubmit={handleLogin}
+        onSubmit={handleRegister}
         className="bg-white/80 shadow-xl rounded-2xl px-8 py-10 flex flex-col gap-5 min-w-[320px] w-full max-w-sm"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <h1 className="text-2xl font-bold text-center text-slate-800 mb-2 tracking-wide">
-          Login
+          Register
         </h1>
         <input
           type="email"
@@ -59,6 +50,13 @@ export default function Login() {
           autoFocus
         />
         <input
+          type="text"
+          placeholder="Login"
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+          className="px-4 py-3 rounded-lg bg-slate-100 focus:bg-blue-50 focus:ring-2 focus:ring-blue-300 outline-none transition-all text-slate-700"
+        />
+        <input
           type="password"
           placeholder="Senha"
           value={password}
@@ -67,14 +65,10 @@ export default function Login() {
         />
         <motion.button
           type="submit"
-          className="mt-2 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-md hover:from-blue-600 hover:to-cyan-500 transition-all"
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 300 }}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
         >
-          Entrar
+          Registrar
         </motion.button>
-        <Link href={"/register"}>Register</Link>
       </motion.form>
     </main>
   );
